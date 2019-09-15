@@ -23,16 +23,16 @@ class TxtFile:
 @attr.s
 class ProcessFilelist:
     """Pipeline to process a list of files.
-    Reads attributes from filename and creates a list of EyeFile objects to pass.
-    Attributes: filelist, invalid_files, eyedict.
-    Methods: instantiate_eye_file, assert_csv, extract_file_attrs.
+    Reads attributes from filename and creates a list of TxtFile objects to pass.
+    Attributes: filelist, invalid_files, txt_dict.
+    Methods: instantiate_txt_file, assert_csv, extract_file_attrs.
     """
     filelist = attr.ib(validator=instance_of(list))
     invalid_files = attr.ib(default=attr.Factory(list)) ### should add invalid files output ###
-    txt_dict = attr.ib(default=attr.Factory(dict)) # nested dict of TxtFile instances to pass forward
+    txt_dict = attr.ib(default=attr.Factory(dict)) # dict of TxtFile instances to pass forward
 
     def get_file_attrs(self) -> None:
-        """Analizes file attributes and instantiate EyeFile objects"""
+        """Analizes file attributes and instantiate TxtFile objects"""
         for txtfile in self.filelist:
             path = Path(txtfile)
             fname = path.name
@@ -45,20 +45,10 @@ class ProcessFilelist:
                 self.invalid_files.append(fname)
                 continue
             hour, minutes, seconds = fattrs[0], fattrs[1], fattrs[2]
-            # experiment, id_num, design, data_type = fattrs[0], fattrs[3], fattrs[5], fattrs[9]
             fstart = f'{hour}:{minutes}:{seconds}'
             experiment = os.path.basename(os.path.dirname(path))
             # head, tail = os.path.split(path)
             # experiment = head
-            
-            
-            # if 'fix' in data_type:
-            #     data_type = 'fixations'
-            # elif 'message' in data_type:
-            #     data_type = 'events'
-            # else: # accepts only fixations or messages files
-            #     self.invalid_files.append(fname)
-            #     continue
             self.instantiate_txt_file(path, fname, experiment, fstart, hour, minutes, seconds)
     
     def assert_txt(self, path: Path) -> bool:
@@ -72,12 +62,8 @@ class ProcessFilelist:
         # return fattrs if len(fattrs) == 10 else False
         
     def instantiate_txt_file(self, path: Path, fname: str, experiment: str, fstart: str, hour, minutes, seconds) -> TxtFile:
-        """Instantiates EyeFile objects"""
+        """Instantiates TxtFile objects"""
         txt_item = TxtFile(path=path, fname=fname, experiment=experiment, fstart = fstart, hour = hour, minutes = minutes, seconds = seconds)
-        # try:
-        #     self.txt_dict[f'{id_num}_{design}'][data_type] = txt_item
-        # except KeyError:
-        #     self.txt_dict[f'{id_num}_{design}'] = {data_type: txt_item}
         try:
             self.txt_dict[f'{fname}'] = txt_item
         except KeyError:

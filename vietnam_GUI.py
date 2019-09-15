@@ -7,8 +7,8 @@ import PySimpleGUI as sg
 class txt_GUI:
     """Main GUI for Vietnam Analysis.
     Recieves from user files/folder....(change here)
-    Attributes: filelist, ref_images, screen_res, fix_point, values.
-    Methods: get_user_input, get_filelist, get_ref_images, get_screen_res, get_fix_point, run.
+    Attributes: filelist.
+    Methods: get_user_input, get_filelist, run.
     """
     filelist = attr.ib(default=attr.Factory(list))
     folder = attr.ib(default=attr.Factory(str))
