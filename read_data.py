@@ -16,6 +16,7 @@ class FileData:
         self.df = pd.DataFrame()
         # self.df_file = pd.read_fwf(f.path, header=None)
         self.df_file = pd.read_csv(f.path, sep="\t", header=None)
+        self.experiment = f.experiment
         
 
     def create_df(self) -> None:
@@ -70,7 +71,7 @@ class AllFiles:
 
     def save_csv(self) -> None:
         """Saves dataframe into csv file"""
-        output_file = (f"Data_Frame_{pd.Timestamp.now().strftime('%Y_%m_%d_%H_%M_%S')}.csv")
+        output_file = (f"Data_Frame_{self.experiment}_{pd.Timestamp.now().strftime('%Y_%m_%d_%H_%M_%S')}.csv")
         output_dir = Path('Results')
         output_dir.mkdir(parents=True, exist_ok=True)
         self.df_all.to_csv(output_dir / output_file)
