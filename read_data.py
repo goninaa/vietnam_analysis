@@ -69,6 +69,7 @@ class AllFiles:
         for df in self.df_list:
             basic_df = self.merge_df(basic_df, df)
         basic_df.index = pd.TimedeltaIndex(basic_df['real_start'])
+        basic_df = basic_df.sort_index()
         self.df_all = basic_df
 
     def save_csv(self) -> None:
