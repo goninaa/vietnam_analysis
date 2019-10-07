@@ -24,6 +24,7 @@ class FileData:
         df = self.df_file.copy()
         df.columns = ["start_time", "end_time","activity"]
         df['start_time'] = pd.to_timedelta(df['start_time'], unit='s')
+        df['start_time'] = df['start_time'] - pd.to_timedelta(df['start_time'].dt.days, unit='d')
         df['end_time'] = pd.to_timedelta(df['end_time'], unit='s')
         self.df = df
 
@@ -67,11 +68,12 @@ class AllFiles:
         basic_df = self.df_list.pop(0)
         for df in self.df_list:
             basic_df = self.merge_df(basic_df, df)
+        basic_df.index = pd.TimedeltaIndex(basic_df['real_start'])
         self.df_all = basic_df
 
     def save_csv(self) -> None:
         """Saves dataframe into csv file"""
-        output_file = (f"Data_Frame_{self.experiment}_{pd.Timestamp.now().strftime('%Y_%m_%d_%H_%M_%S')}.csv")
+        output_file = (f"Data_Frame_{pd.Timestamp.now().strftime('%Y_%m_%d_%H_%M_%S')}.csv")
         output_dir = Path('Results')
         output_dir.mkdir(parents=True, exist_ok=True)
         self.df_all.to_csv(output_dir / output_file)
