@@ -17,6 +17,7 @@ class CsvData:
     txtdict = attr.ib(default=attr.Factory(dict))
     df_list = attr.ib(default=attr.Factory(list))
     b_data = attr.ib(default=AllFiles)
+    device_num = attr.ib(default=attr.Factory(str))
         
     def input(self) -> bool:
         """prompts for user input"""
@@ -40,10 +41,11 @@ class CsvData:
             data = FileData(fname_f)
             data.run()
             self.df_list.append(data.df)
-    
+            self.device_num = data.experiment
+
     def big_data(self) -> None:
         """creates one big data frame from all data frames in the list"""
-        b_data = AllFiles (self.df_list)
+        b_data = AllFiles (self.df_list, device_num= self.device_num)
         b_data.run()
         self.b_data = b_data
 

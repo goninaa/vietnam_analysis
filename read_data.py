@@ -55,7 +55,7 @@ class AllFiles:
     """
     df_list = attr.ib(validator=instance_of(list))
     df_all = attr.ib(default=pd.DataFrame)
-   
+    device_num = attr.ib(default=attr.Factory(str))
 
     def merge_df(self, basic_df: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
         """Appends dataframe given by create_big_data func into one multi-index data frame"""
@@ -72,9 +72,15 @@ class AllFiles:
         basic_df = basic_df.sort_index()
         self.df_all = basic_df
 
+    def device_number (self):
+        self.device_num= self.device_num.split("_")
+        self.device_num = self.device_num[-1]
+        # print (self.device_num)
+
     def save_csv(self) -> None:
         """Saves dataframe into csv file"""
-        output_file = (f"Data_Frame_{pd.Timestamp.now().strftime('%Y_%m_%d_%H_%M_%S')}.csv")
+        output_file = (f"Data_Frame_{self.device_num}.csv")
+        # output_file = (f"Data_Frame_{pd.Timestamp.now().strftime('%Y_%m_%d_%H_%M_%S')}.csv")
         output_dir = Path('Results')
         output_dir.mkdir(parents=True, exist_ok=True)
         self.df_all.to_csv(output_dir / output_file)
@@ -82,6 +88,7 @@ class AllFiles:
     def run(self) -> None:
         """Main pipeline"""
         self.create_big_data()
+        self.device_number()
         # self.cond_names()
         self.save_csv()
 
