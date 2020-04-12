@@ -20,9 +20,12 @@ class DATA:
             
     def time_to_index (self): # need to be fixed in order to use
             """change time column into datetime index"""
-            self.df.rename( columns={'Unnamed: 0':'time'}, inplace=True )
-            self.df.index = pd.to_datetime(self.df['time'])
-            # self.df.drop(['time'], axis=1, inplace=True)
+            # self.df.index = pd.TimedeltaIndex(self.df['time'])
+            #for files with no "time" column:
+            self.df.rename(columns={'Unnamed: 0':'time'}, inplace=True)
+            self.df.index = pd.TimedeltaIndex(self.df['time'])
+            # self.df.index = pd.to_datetime(self.df['time'])
+            # #self.df.drop(['time'], axis=1, inplace=True)
 
     def short_fname (self):
         """shorten fname to file name only and find trial_date"""
@@ -89,13 +92,14 @@ class DATA:
 
 
 if __name__ == "__main__":
-    path = '/Users/gonina/Dropbox/vietnam-backup/mytois pilosus/excel analysis/devices_for_analysis/110819/'
-    data1 = DATA(f'{path}Data_Frame_10.csv', 1)
-    data2 = DATA(f'{path}Data_Frame_22.csv', 0)
-    data3 = DATA(f'{path}Data_Frame_29.csv', 0)
-    data4 = DATA(f'{path}Data_Frame_37.csv', 1)
-    data5 = DATA(f'{path}Data_Frame_40.csv', 1)
-    data6 = DATA(f'{path}Data_Frame_42.csv', 0)
+    #color: 1 white, 0 black
+    path = '/Users/gonina/Dropbox/classes/vietnam_workshop/myotis pilosus/all data analysis/devices_for_analysis/180819/'
+    data1 = DATA(f'{path}Data_Frame_7.csv', 0)
+    data2 = DATA(f'{path}Data_Frame_9.csv', 0)
+    data3 = DATA(f'{path}Data_Frame_14.csv', 0)
+    data4 = DATA(f'{path}Data_Frame_16.csv', 1)
+    data5 = DATA(f'{path}Data_Frame_34.csv', 1)
+    data6 = DATA(f'{path}Data_Frame_36.csv', 1)
 
     file_list = [data1,data2,data3,data4,data5,data6]
 

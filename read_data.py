@@ -68,8 +68,13 @@ class AllFiles:
         basic_df = self.df_list.pop(0)
         for df in self.df_list:
             basic_df = self.merge_df(basic_df, df)
-        basic_df.index = pd.TimedeltaIndex(basic_df['real_start'])
-        basic_df = basic_df.sort_index()
+        # basic_df.index = pd.TimedeltaIndex(basic_df['real_start'])
+        basic_df.insert(0, 'time', pd.TimedeltaIndex(basic_df['real_start'])) #new
+        # basic_df['time'] = pd.TimedeltaIndex(basic_df['real_start']) #new
+        basic_df = basic_df.sort_values(by = ['time'])
+        # basic_df.index = pd.TimedeltaIndex(basic_df['time']) #new
+        # basic_df.drop ('time', axis=1 ,inplace=True) #new
+        # basic_df = basic_df.sort_index()
         self.df_all = basic_df
 
     def device_number (self):
