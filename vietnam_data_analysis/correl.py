@@ -4,11 +4,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import ttest_ind
 
-df_all_norm = pd.read_csv('three_days_norm.csv')
+# df_all_norm = pd.read_csv('three_days_norm.csv')
+df_all_norm = pd.read_csv('/Users/gonina/Dropbox/classes/vietnam_workshop/myotis pilosus/all data analysis/norm_5_days.csv')
+# df_all_no_11 = pd.read_csv('/Users/gonina/Dropbox/classes/vietnam_workshop/myotis pilosus/all data analysis/all_without_11.csv')
 # print (df_all_norm.tail())
 df_11 = df_all_norm.loc[df_all_norm['date']=='11/08/2019']
 df_13 = df_all_norm.loc[df_all_norm['date']=='13/08/2019']
 df_14 = df_all_norm.loc[df_all_norm['date']=='14/08/2019']
+df_17 = df_all_norm.loc[df_all_norm['date']=='17/08/2019']
+df_18 = df_all_norm.loc[df_all_norm['date']=='18/08/2019']
 
 
 def correl_df (df, title, fname):
@@ -52,13 +56,16 @@ def t_test(df, night):
     return t_dict, df_t
 
    
-# t_dict_11, df_t_11 = t_test(df_11, 11)
-# t_dict_13, df_t_13 = t_test(df_13, 13)
-# t_dict_14, df_t_14 = t_test(df_14, 14)
-# t_dict_all, df_t_all = t_test(df_all_norm, 'all')
-# print (df_t_13)
-# print (df_t_14)
-# print (df_t_all)
+t_dict_11, df_t_11 = t_test(df_11, 11)
+t_dict_13, df_t_13 = t_test(df_13, 13)
+t_dict_14, df_t_14 = t_test(df_14, 14)
+t_dict_17, df_t_17 = t_test(df_17, 17)
+t_dict_18, df_t_18 = t_test(df_18, 18)
+t_dict_all, df_t_all = t_test(df_all_norm, 'all')
+# t_dict_all_no_11, df_t_all_no_11 = t_test(df_all_no_11, 'all_without_11')
+print (df_t_13)
+print (df_t_14)
+print (df_t_all)
 
 # def box_plot (df, col, fname):
 # def box_plot (df, fname):
@@ -86,20 +93,32 @@ def box_plot (df, col, fname):
 # b = box_plot(df_11,'11.8.19')
 
 cols = ['search','approach','buzz1','buzz2', 'attack', 'sum buzz+attack']
-plt.subplots(2, 3)
-for i in range(2):
-    for j in range(3):
-       box_plot(df_11, cols[i] ,'11.8.19')
+# plt.subplots(2, 3)
+# for i in range(2):
+#     for j in range(3):
+#        box_plot(df_11, cols[i] ,'11.8.19')
     # box_plot(df_11, cols[i] ,'11.8.19')
 
-# for col in cols:
-#     b = box_plot(df_11, col ,'11.8.19')
+for col in cols:
+    b = box_plot(df_11, col ,'11.8.19')
+
+for col in cols:
+    b = box_plot(df_13, col ,'13.8.19')
+
+for col in cols:
+    b = box_plot(df_14, col ,'14.8.19')
+
+for col in cols:
+    b = box_plot(df_17, col ,'17.8.19')
+
+for col in cols:
+    b = box_plot(df_18, col ,'18.8.19')
+
+for col in cols:
+    b = box_plot(df_all_norm, col ,'all nights')
 
 # for col in cols:
-#     b = box_plot(df_13, col ,'13.8.19')
-
-# for col in cols:
-#     b = box_plot(df_14, col ,'14.8.19')
+#     b = box_plot(df_all_no_11, col ,'all nights')
 
 # for col in cols:
 #     b = box_plot(df_all_norm, col ,'Three days')
