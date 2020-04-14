@@ -6,7 +6,6 @@ from scipy.stats import ttest_ind
 
 # df_all_norm = pd.read_csv('three_days_norm.csv')
 df_all_norm = pd.read_csv('/Users/gonina/Dropbox/classes/vietnam_workshop/myotis pilosus/all data analysis/norm_5_days.csv')
-# df_all_no_11 = pd.read_csv('/Users/gonina/Dropbox/classes/vietnam_workshop/myotis pilosus/all data analysis/all_without_11.csv')
 # print (df_all_norm.tail())
 df_11 = df_all_norm.loc[df_all_norm['date']=='11/08/2019']
 df_13 = df_all_norm.loc[df_all_norm['date']=='13/08/2019']
@@ -62,6 +61,7 @@ t_dict_14, df_t_14 = t_test(df_14, 14)
 t_dict_17, df_t_17 = t_test(df_17, 17)
 t_dict_18, df_t_18 = t_test(df_18, 18)
 t_dict_all, df_t_all = t_test(df_all_norm, 'all')
+
 # t_dict_all_no_11, df_t_all_no_11 = t_test(df_all_no_11, 'all_without_11')
 print (df_t_13)
 print (df_t_14)
