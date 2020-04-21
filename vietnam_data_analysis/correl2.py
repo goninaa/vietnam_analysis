@@ -5,14 +5,30 @@ import seaborn as sns
 from scipy.stats import ttest_ind
 
 # df_all_norm = pd.read_csv('three_days_norm.csv')
-df_all_norm = pd.read_csv('/Users/gonina/Dropbox/classes/vietnam_workshop/myotis pilosus/all data analysis/norm_5_days_removed_devices.csv')
+df_all = pd.read_csv('/Users/gonina/Dropbox/classes/vietnam_workshop/myotis pilosus/all data analysis/all_days_24_devices_not_normalized/all_days_24_devices.csv')
+# df_all_norm = pd.read_csv('/Users/gonina/Dropbox/classes/vietnam_workshop/myotis pilosus/all data analysis/analysis by strings/string1.csv')
 # print (df_all_norm.tail())
-df_11 = df_all_norm.loc[df_all_norm['date']=='11/08/2019']
-df_13 = df_all_norm.loc[df_all_norm['date']=='13/08/2019']
-df_14 = df_all_norm.loc[df_all_norm['date']=='14/08/2019']
-df_17 = df_all_norm.loc[df_all_norm['date']=='17/08/2019']
-df_18 = df_all_norm.loc[df_all_norm['date']=='18/08/2019']
-
+# df_11 = df_all_norm.loc[df_all_norm['date']=='11/08/2019']
+# df_13 = df_all_norm.loc[df_all_norm['date']=='13/08/2019']
+# df_14 = df_all_norm.loc[df_all_norm['date']=='14/08/2019']
+# df_17 = df_all_norm.loc[df_all_norm['date']=='17/08/2019']
+# df_18 = df_all_norm.loc[df_all_norm['date']=='18/08/2019']
+df_11 = df_all.loc[df_all['date']=='11/08/2019']
+df_13 = df_all.loc[df_all['date']=='13/08/2019']
+df_14 = df_all.loc[df_all['date']=='14/08/2019']
+df_17 = df_all.loc[df_all['date']=='17/08/2019']
+df_18 = df_all.loc[df_all['date']=='18/08/2019']
+# df_a = df_all_norm.loc[df_all_norm['location']=='a']
+# df_b = df_all_norm.loc[df_all_norm['location']=='b']
+# df_c = df_all_norm.loc[df_all_norm['location']=='c']
+# df_d = df_all_norm.loc[df_all_norm['location']=='d']
+# df_e = df_all_norm.loc[df_all_norm['location']=='e']
+# df_f = df_all_norm.loc[df_all_norm['location']=='f']
+# df_2 = df_all_norm.loc[df_all_norm['string location']==2]
+# df_3 = df_all_norm.loc[df_all_norm['string location']==3]
+# df_close = pd.concat([df_a, df_c, df_e])
+# df_far = pd.concat([df_b, df_d,df_f])
+print (df_all)
 
 def correl_df (df, title, fname):
     # cols = df_all_norm.columns
@@ -36,7 +52,7 @@ def correl_df (df, title, fname):
 
 # correl_df(df_11,'11/08/19' ,'df_11')
 # correl_df(df_13, '13/08/19', 'df_13')
-# correl_df(df_14, '14/08/19', 'df_14')
+# correl_df(df_17, '17/08/19', 'df_17')
 # correl_df(df_all_norm, 'Three days', 'df_all_norm')
 
 # def t_test(df, title, name):
@@ -45,7 +61,8 @@ def t_test(df, night):
     df_t = pd.DataFrame()
     white = df[df['color'] == 1]
     black = df[df['color'] == 0]
-    cols = ['search','approach','buzz1','buzz2', 'attack', 'sum buzz+attack']
+    # cols = ['sum buzzes','sum buzz+attack','sum activities']
+    cols = ['search','approach','buzz1','buzz2', 'attack', 'sum buzz+attack', 'sum', 'sum buzzes','sum activities','search-approach']
     for col in cols:
         t_stat = ttest_ind(white[col],black[col])
         t_dict[col] = t_stat
@@ -59,8 +76,13 @@ t_dict_11, df_t_11 = t_test(df_11, 11)
 t_dict_13, df_t_13 = t_test(df_13, 13)
 t_dict_14, df_t_14 = t_test(df_14, 14)
 t_dict_17, df_t_17 = t_test(df_17, 17)
-t_dict_18, df_t_18 = t_test(df_18, 18)
-t_dict_all, df_t_all = t_test(df_all_norm, 'all')
+# t_dict_18, df_t_18 = t_test(df_18, 18)
+# t_dict_1, df_t_1 = t_test(df_1, 'string1')
+# t_dict_close, df_t_close = t_test(df_close, 'loc_close')
+# t_dict_far, df_t_far = t_test(df_far, 'loc_far')
+# t_dict_3, df_t_3 = t_test(df_3, 'string3')
+# t_dict_all, df_t_all = t_test(df_all_norm, 'all')
+t_dict_all, df_t_all = t_test(df_all, 'all')
 
 # t_dict_all_no_11, df_t_all_no_11 = t_test(df_all_no_11, 'all_without_11')
 # print (df_t_13)
@@ -91,8 +113,9 @@ def box_plot (df, col, fname):
 
 
 # b = box_plot(df_11,'11.8.19')
-
-cols = ['search','approach','buzz1','buzz2', 'attack', 'sum buzz+attack']
+# cols = ['sum buzzes','sum buzz+attack','sum activities']
+# cols = ['search','approach','buzz1','buzz2', 'attack', 'sum buzz+attack', 'sum']
+cols = ['search','approach','buzz1','buzz2', 'attack', 'sum buzz+attack', 'sum', 'sum buzzes','sum activities','search-approach']
 # plt.subplots(2, 3)
 # for i in range(2):
 #     for j in range(3):
@@ -114,11 +137,20 @@ for col in cols:
 for col in cols:
     b = box_plot(df_18, col ,'18.8.19')
 
+# for col in cols:
+    # b = box_plot(df_all_norm, col ,'all nights')
+
 for col in cols:
-    b = box_plot(df_all_norm, col ,'all nights')
+    b = box_plot(df_all, col ,'all nights')
 
 # for col in cols:
-#     b = box_plot(df_all_no_11, col ,'all nights')
+#     b = box_plot(df_1, col ,'string 1')
 
 # for col in cols:
-#     b = box_plot(df_all_norm, col ,'Three days')
+#     b = box_plot(df_2, col ,'string 2')
+
+# for col in cols:
+#     b = box_plot(df_close, col ,'loc_close')
+
+# for col in cols:
+#     b = box_plot(df_far, col ,'loc_far')
