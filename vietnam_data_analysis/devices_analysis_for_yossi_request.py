@@ -180,7 +180,7 @@ if __name__ == "__main__":
         # all_data.append(f.df)
         all_data.append(f.df_activity)
         trial_date = f.trial_date
-    print (all_data)
+    # print (all_data)
 
 #here, combine them all to one df:
     basic_df = all_data.pop(0)
@@ -188,44 +188,99 @@ if __name__ == "__main__":
         basic_df = pd.concat([basic_df, df], sort = False)
     df_all = basic_df
     df_all = df_all[['activity','date','device','color','location','time']]
-    print (df_all)
-    print (df_all['activity'].unique())
+    # print (df_all)
+    acts = df_all['activity'].unique()
+    print (acts)
 
     ###part 2
+    # df_all = pd.read_csv(fname)
 
-    # df_sum_time = df_all.resample(minutes, base = base, label='right').mean()
-    minutes = '30Min'
-    # df_sum_time = df_all[df_all['activity']=='search'].resample(minutes, label='right').count()
-    # print (df_sum_time['time'])
-    # df_sum_time = df_all[df_all['activity']=='attack'].resample(minutes, label='right').count()
-    # print (df_sum_time)
+    def into_bins(device,minutes='20Min'):
+        df = df_all[df_all['device']==device].copy()
+        # df_all.index = pd.to_datetime(df_all['time']).dt.time
+        df = df.copy().append({'time':'11:30:00'},ignore_index=True)
+        df['time'] = pd.TimedeltaIndex(df['time'])
+        # df_bins = df.groupby([pd.Grouper(key='time',base = 30, freq= minutes), 'activity']).size() #working!!!!
+        df_bins = df.groupby([pd.Grouper(key='time',base = 30, freq= minutes), 'activity','date','device','color','location']).size() #working!!!!
+        # v = df_all.groupby([pd.Grouper(key='time', freq='30min'), 'activity']).size().unstack(fill_value=0) #also working
+        # print (df_bins)
+        return df_bins
 
-    # df_all.index = pd.TimedeltaIndex(df_all['time'])
-    # v = (df_all.groupby([pd.Grouper(key='time', freq='20min'), 'activity']).size().unstack(fill_value=0))
-    # v.groupby(v.index.time).sum()
-    # print (v)
-      # df_sum_time = df_sum_time.groupby(df_sum_time.activity).count()
-    # df_sum_time.groupby(df_sum_time.index).count()
+    devices = df_all['device'].unique()
+    frames= []
+    for device in devices:
+        df_bin = into_bins(device)
+        frames.append(df_bin)
+    result = pd.concat(frames) 
+    result.to_csv(f'test_1808.csv')
+    print (result)
 
+    # dev_7 = into_bins('7')
+    # dev_9 = into_bins('9')
+    # dev_14 = into_bins('14')
     
-    dev_7 = df_all[df_all['device']=='7']
-    print (dev_7)
-    print (dev_7['activity'].unique)
-    # dev_7_time = dev_7[dev_7['activity']=='search'].resample(minutes, label='right').count() #good
-    df_all.index = pd.to_datetime(df_all['time']).dt.time
-    # base = df_all.index[0].minute
-    base = 11
-    print (base)
-    dev_7_time = dev_7[dev_7['activity']=='search'].resample(minutes, base=base, label='right').count()
-    # 
-    # dev_7_time['search'] = dev_7[dev_7['activity']=='search'].resample(minutes, label='right').count()
-    # df_new = pd.DataFrame( columns=['search', 'number'])
-    df_new = pd.DataFrame()
-    df_new = pd.concat([df_new, dev_7_time['activity']], sort = False)
-    # df_new['search']= df_new[0]
-    df_new = df_new.rename({0: 'search'}, axis='columns')
-    print (dev_7_time)
-    print (df_new)
+    # print (dev_7)
+    # print (dev_9)
+
+    # frames = [dev_7,dev_9]
+    # # result = pd.concat(frames, keys=['dev_7','dev_9']) 
+    # #here, combine them all to one df:
+    # result = pd.concat(frames) 
+    # # df.set_index(['time'])
+    # print (result)
+
+
+
+    # result.to_csv(f'test_1808.csv')
+    # print (df_all[df_all['device']=='7'])
+
+    # minutes = '30Min'
+    # dev_7 = df_all[df_all['device']=='7']
+    # # df_all.index = pd.to_datetime(df_all['time']).dt.time
+    # df_all = df_all.copy().append({'time':'11:30:00'},ignore_index=True)
+    # df_all['time'] = pd.TimedeltaIndex(df_all['time'])
+    # df_bins = df_all.groupby([pd.Grouper(key='time', convention='start',base = 30, freq= minutes), 'activity']).size() #working!!!!
+    # # v = df_all.groupby([pd.Grouper(key='time', freq='30min'), 'activity']).size().unstack(fill_value=0) #also working
+    # print (df_bins)
+
+
+    # df_new = pd.DataFrame()
+    # df_bins = df_all.resample(minutes, base=base, label='right').count()
+    # print (df_bins)
+    # for act in acts:
+    #     dev_7_time = dev_7[dev_7['activity']==act].resample(minutes, base=base, label='right').count() #good
+    #     print (dev_7_time)
+    #     df_new.append(dev_7_time['activity'])
+   
+   
+    #     # df_new = pd.concat([df_new, dev_7_time['activity']], sort = False)
+    # # df_new['search']= df_new[df_new.columns[0]]
+    # # df_new.drop(0,axis=1,inplace=True)
+
+    # print (dev_7_time)
+    # print (df_new)
+
+
+
+    # minutes = '30Min'
+    # base =11
+    # dev_7 = df_all[df_all['device']=='7']
+    # # print (dev_7)
+    # # print (dev_7['activity'].unique)
+    # df_all.index = pd.to_datetime(df_all['time']).dt.time
+    # # base = df_all.index[0].minute
+ 
+    # dev_7_time = dev_7[dev_7['activity']=='search'].resample(minutes, base=base, label='right').count() #good
+    # # 
+    # # dev_7_time['search'] = dev_7[dev_7['activity']=='search'].resample(minutes, label='right').count()
+    # # df_new = pd.DataFrame( columns=['search', 'number'])
+    # df_new = pd.DataFrame()
+    # df_new = pd.concat([df_new, dev_7_time['activity']], sort = False)
+    # df_new['search']= df_new[df_new.columns[0]]
+    # df_new.drop(0,axis=1,inplace=True)
+    # # df_new = df_new.rename({0: 'search'}, axis='columns') #works
+    # print (dev_7_time)
+    # print (df_new)
 
 
 
@@ -234,60 +289,3 @@ if __name__ == "__main__":
     # print (df_count)
     # df_count = Counter(dev_7_time['activity'])
     # print (df_count)
-
-# #add sums columns:
-#     df_all['sum'] = df_all['search']+ df_all['approach']+df_all['buzz1']+df_all['buzz2']+df_all['attack']
-#     df_all['sum buzz+attack'] = df_all['buzz1']+df_all['buzz2']+df_all['attack']
-#     df_all = df_all[['color', 'search', 'approach', 'buzz1', 'buzz2', 'attack','sum buzz+attack', 'sum']]
-#     print (df_all)
-
-# #normalize df_all:
-#     df_all_norm = df_all.copy()
-#     for col in df_all_norm.columns[1:]:
-#         df_all_norm[col] = df_all[col]/df_all['sum'] 
-
-#     df_all_norm = df_all_norm[['color', 'search', 'approach', 'buzz1', 'buzz2', 'attack','sum buzz+attack', 'sum']]
-#     print (df_all_norm)
-
-# save to csv:
-    print (trial_date)
-#     trial_date = '130819'
-    # df_all.to_csv(f'{trial_date}_df_all.csv')
-    # df_all_norm.to_csv(f'{trial_date}_df_norm.csv')
-
-
-#     # vis correl
-   # # plt.plot (df_all_norm)
-    ## plt.show()
-
-#     cols = df_all_norm.columns
-#     cm = np.corrcoef(df_all_norm[cols].values.T)
-# #sns.set(font_scale=1.5)
-#     hm = sns.heatmap(cm,
-#                     cbar=True,
-#                     annot=True,
-#                     square=True,
-#                     fmt='.2f',
-#                     annot_kws={'size': 9},
-#                     yticklabels=cols,
-#                     xticklabels=cols)
-
-#     plt.tight_layout()
-#     # plt.savefig('images/10_04.png', dpi=300)
-#     plt.show()
-
-#     cols = df_all.columns
-#     cm = np.corrcoef(df_all[cols].values.T)
-# #sns.set(font_scale=1.5)
-#     hm = sns.heatmap(cm,
-#                     cbar=True,
-#                     annot=True,
-#                     square=True,
-#                     fmt='.2f',
-#                     annot_kws={'size': 9},
-#                     yticklabels=cols,
-#                     xticklabels=cols)
-
-#     plt.tight_layout()
-#     # plt.savefig('images/10_04.png', dpi=300)
-#     plt.show()
